@@ -5,7 +5,15 @@ jobs:
     docker:
       - image: 'thomasatsnyk/docker-goof:lts'
     steps:
-      - checkout    
-      - run: npm ci
-      - snyk/scan 
+        - run:
+            command: 'docker build -t thomasatsnyk/docker-goof:test .'
+            name: Build Docker image
+        - snyk/scan:
+            docker-image-name: 'thomasatsnyk/docker-goof:test'
+            fail-on-issues: false
+            monitor-on-build: true
+            project: '$goof/$master-container'
+            severity-threshold: high
+            target-file: Dockerfile
+            token-variable: 2a9f08da-8e28-4d59-a6c2-74435f9fcb5b
 workflows: null
